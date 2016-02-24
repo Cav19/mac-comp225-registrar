@@ -10,10 +10,10 @@ import java.util.Set;
 public class Student {
 
     public String name;
-    public Set<Course> enrolledIn;
+    public Set<Course> courses;
 
     public Student(){
-        enrolledIn = new HashSet<>();
+        courses = new HashSet<>();
     }
 
     public void setName(String name){
@@ -21,22 +21,26 @@ public class Student {
     }
 
     public Set<Course> getCourses(){
-        return enrolledIn;
+        return courses;
     }
 
     public boolean enrollIn(Course c){
-        if(c.enrollIn(this)) {
-            enrolledIn.add(c);
+        if(c.hasSpace()) {
+            courses.add(c);
+            c.enroll(this);
             return true;
         }
-        else {
+        else{
+            if(!c.getWaitlist().contains(this)){
+                c.addToWaitlist(this);
+            }
             return false;
         }
     }
 
     public void drop(Course c){
-        if (enrolledIn.contains(c)) {
-            enrolledIn.remove(c);
+        if (courses.contains(c)) {
+            courses.remove(c);
         }
         c.dropStudent(this);
     }
